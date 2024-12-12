@@ -157,6 +157,14 @@ class GitDigraph(Digraph):
         *hexsha* of the git-obj (:py:meth:`GitFormatter.getID`)
 
         """
+        if isinstance(gitObj, git.Commit):
+            for p in gitObj.parents:
+                self.addGitObj(p)
+                self.dot.add_edge(
+                    gitObj.hexsha,
+                    p.hexsha,
+                )
+        
         if self.git_objs.get(gitObj.hexsha, None) is None:
             self.git_objs[gitObj.hexsha] = gitObj
             for p in gitObj.parents:
